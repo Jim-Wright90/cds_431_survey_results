@@ -1,0 +1,251 @@
+---
+title: "CDS 431 Spring 2022 Survey Data"
+output: 
+    html_document:
+      theme: spacelab
+      highlight: tango
+      toc: TRUE
+      toc_float: TRUE
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+```{r setup 1, include=FALSE}
+library(tidyverse)
+library(rio)
+library(here)
+library(colorblindr)
+library(gghighlight)
+library(forcats)
+library(ggrepel)
+library(gt)
+library(knitr)
+library(kableExtra)
+library(reactable)
+library(plotly)
+library(SCVA)
+library(patchwork)
+
+theme_set(theme_minimal(15) +
+            theme(legend.position = "bottom",
+                  panel.grid.major.x = element_line(color = "gray60"),
+                  panel.grid.minor.x = element_blank(),
+                  panel.grid.major.y = element_blank())
+          )
+
+```
+
+```{r, include=FALSE}
+gtky <- import(here("data", "get_to_know.sav"),
+               setclass = "tbl_df") %>% 
+  characterize() %>% 
+  janitor::clean_names()
+
+str(gtky)
+
+gtky[sapply(gtky, is.character)] <- lapply(gtky[sapply(gtky, is.character)],
+                                                 as.factor)
+
+str(gtky)
+```
+
+
+## Get to Know You
+
+### What state are you from?
+
+```{r, include=FALSE}
+
+state <- gtky %>% 
+  group_by(q1) %>% 
+  count()
+
+state$q1 <- factor(state$q1, levels = c("California",
+                                        "Oregon",
+                                        "Washington",
+                                        "Other"))
+
+state_plot <- state %>% 
+  ggplot(aes(q1, n)) +
+  geom_col(fill = "#56B4E9",
+             alpha = 0.7) +
+  geom_text(aes(q1, n, label = n),
+            size = 4,
+            nudge_y = -1.0,
+            nudge_x = 0.3) +
+  labs(x = "State",
+       y = "Total")
+```
+
+```{r, include=TRUE}
+state_plot
+```
+
+Other locations include: 
+
+  * Alaska
+  * Arizona
+  * Hawaii
+  * Ohio
+  * Utah
+  * Harbin, China
+  
+  
+### Are you an undergraduate or post bac student?
+
+```{r, include=FALSE}
+str(gtky)
+
+stu_type <- gtky %>% 
+  group_by(q2) %>% 
+  count()
+
+
+stu_plot <- stu_type %>% 
+  ggplot(aes(q2, n)) +
+  geom_col(fill = "#56B4E9",
+             alpha = 0.7) +
+  scale_y_continuous(limits = c(0, 50),
+                     breaks = c(0, 10, 20, 30, 40, 50)) +
+  geom_text(aes(q2, n, label = n),
+            size = 4,
+            nudge_y = 2.0,
+            nudge_x = 0.3) +
+  labs(x = "",
+       y = "Total")
+```
+
+```{r, include=TRUE}
+stu_plot
+```
+
+
+### Which career do you want to pursue?
+
+```{r, include=FALSE}
+gtky$q3
+
+career <- gtky %>% 
+  group_by(q3) %>% 
+  count()
+
+career$q3 <- factor(career$q3, levels = c("Audiology",
+                                        "Speech-Language Pathology",
+                                        "Other"))
+
+career_plot <- career %>% 
+  ggplot(aes(q3, n)) +
+  scale_y_continuous(limits = c(0, 50),
+                     breaks = c(0, 10, 20, 30, 40, 50)) +
+  geom_col(fill = "#56B4E9",
+             alpha = 0.7) +
+  geom_text(aes(q3, n, label = n),
+            nudge_y = -1.0,
+            nudge_x = 0.3, 
+            size = 4) +
+  labs(x = "",
+       y = "Total")
+```
+
+```{r, include=TRUE}
+career_plot
+```
+
+Other career plans include: 
+
+  * Masters in fitness
+  * Law enforcement 
+  * Special education 
+  * Occupational therapy 
+
+### What is your preferred work setting?
+
+```{r, include=FALSE}
+gtky$q4
+
+setting <- gtky %>% 
+  group_by(q4) %>% 
+  count()
+
+setting_plot <- setting %>% 
+  ggplot(aes(q4, n)) +
+  scale_y_continuous(limits = c(0, 25),
+                     breaks = c(0, 5, 10, 15, 20, 25)) +
+  geom_col(fill = "#56B4E9",
+             alpha = 0.7) +
+  geom_text(aes(q4, n, label = n),
+            nudge_y = -1.0,
+            nudge_x = 0.3, 
+            size = 4) +
+  labs(x = "",
+       y = "Total") + 
+  theme(axis.text.x=element_text(angle=45,hjust=1))
+```
+
+```{r, include=TRUE}
+ggplotly(setting_plot)
+```
+
+### What age group are you most interested in working with?
+
+```{r, include=FALSE}
+gtky$q5
+
+age_group <- gtky %>% 
+  group_by(q5) %>% 
+  count()
+
+
+age_group$q5 <- factor(age_group$q5, levels = c("Birth through age 5",
+                                        "Kindergarten through Grade 12",
+                                        "Adults 18-65",
+                                        "Adults 65 and older"))
+
+age_group_plot <- age_group %>% 
+  ggplot(aes(q5, n)) +
+  scale_y_continuous(limits = c(0, 25),
+                     breaks = c(0, 5, 10, 15, 20, 25)) +
+  geom_col(fill = "#56B4E9",
+             alpha = 0.7) +
+  geom_text(aes(q5, n, label = n),
+            nudge_y = 2.0,
+            nudge_x = 0.3, 
+            size = 4) +
+  labs(x = "",
+       y = "Total") +
+    theme(axis.text.x=element_text(angle=45,hjust=1))
+```
+
+```{r, include=TRUE}
+ggplotly(age_group_plot)
+```
+
+### What type of communication disorder most interests you?
+
+```{r, include=FALSE}
+gtky$q6
+
+fav_dis <- gtky %>% 
+  group_by(q6) %>% 
+  count() 
+
+
+fav_dis_plot <- fav_dis %>% 
+  ggplot(aes(fct_reorder(q6, n), n)) +
+  scale_y_continuous(limits = c(0, 25),
+                     breaks = c(0, 5, 10, 15, 20, 25)) +
+  geom_col(fill = "#56B4E9",
+             alpha = 0.7) +
+  geom_text(aes(q6, n, label = n),
+            nudge_y = 1.5, 
+            size = 4) +
+  coord_flip() +
+  labs(x = "",
+       y = "Total")
+```
+
+```{r, include=TRUE, fig.width=15}
+ggplotly(fav_dis_plot)
+```
