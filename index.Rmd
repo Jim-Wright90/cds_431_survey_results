@@ -62,13 +62,13 @@ state <- gtky %>%
   group_by(q1) %>% 
   count()
 
-state$q1 <- factor(state$q1, levels = c("California",
-                                        "Oregon",
-                                        "Washington",
-                                        "Other"))
+# state$q1 <- factor(state$q1, levels = c("California",
+#                                         "Oregon",
+#                                         "Washington",
+#                                         "Other"))
 
 state_plot <- state %>% 
-  ggplot(aes(q1, n)) +
+  ggplot(aes(fct_reorder(q1, n), n)) +
   geom_col(fill = "#56B4E9",
              alpha = 0.7) +
   geom_text(aes(q1, n, label = n),
@@ -80,7 +80,7 @@ state_plot <- state %>%
 ```
 
 ```{r, include=TRUE}
-state_plot
+ggplotly(state_plot)
 ```
 
 Other locations include: 
@@ -118,7 +118,7 @@ stu_plot <- stu_type %>%
 ```
 
 ```{r, include=TRUE}
-stu_plot
+ggplotly(stu_plot)
 ```
 
 
@@ -131,18 +131,18 @@ career <- gtky %>%
   group_by(q3) %>% 
   count()
 
-career$q3 <- factor(career$q3, levels = c("Audiology",
-                                        "Speech-Language Pathology",
-                                        "Other"))
+# career$q3 <- factor(career$q3, levels = c("Audiology",
+#                                         "Speech-Language Pathology",
+#                                         "Other"))
 
 career_plot <- career %>% 
-  ggplot(aes(q3, n)) +
+  ggplot(aes(fct_reorder(q3, n), n)) +
   scale_y_continuous(limits = c(0, 50),
                      breaks = c(0, 10, 20, 30, 40, 50)) +
   geom_col(fill = "#56B4E9",
              alpha = 0.7) +
   geom_text(aes(q3, n, label = n),
-            nudge_y = -1.0,
+            nudge_y = -1.5,
             nudge_x = 0.3, 
             size = 4) +
   labs(x = "",
@@ -150,7 +150,7 @@ career_plot <- career %>%
 ```
 
 ```{r, include=TRUE}
-career_plot
+ggplotly(career_plot)
 ```
 
 Other career plans include: 
@@ -170,18 +170,18 @@ setting <- gtky %>%
   count()
 
 setting_plot <- setting %>% 
-  ggplot(aes(q4, n)) +
+  ggplot(aes(fct_reorder(q4, n), n)) +
   scale_y_continuous(limits = c(0, 25),
                      breaks = c(0, 5, 10, 15, 20, 25)) +
   geom_col(fill = "#56B4E9",
              alpha = 0.7) +
   geom_text(aes(q4, n, label = n),
-            nudge_y = -1.0,
+            nudge_y = -1.5,
             nudge_x = 0.3, 
             size = 4) +
   labs(x = "",
        y = "Total") + 
-  theme(axis.text.x=element_text(angle=45,hjust=1))
+  theme(axis.text.x = element_text(angle=45, hjust=1, size = 10))
 ```
 
 ```{r, include=TRUE}
@@ -198,13 +198,13 @@ age_group <- gtky %>%
   count()
 
 
-age_group$q5 <- factor(age_group$q5, levels = c("Birth through age 5",
-                                        "Kindergarten through Grade 12",
-                                        "Adults 18-65",
-                                        "Adults 65 and older"))
+# age_group$q5 <- factor(age_group$q5, levels = c("Birth through age 5",
+#                                         "Kindergarten through Grade 12",
+#                                         "Adults 18-65",
+#                                         "Adults 65 and older"))
 
 age_group_plot <- age_group %>% 
-  ggplot(aes(q5, n)) +
+  ggplot(aes(fct_reorder(q5, n), n)) +
   scale_y_continuous(limits = c(0, 25),
                      breaks = c(0, 5, 10, 15, 20, 25)) +
   geom_col(fill = "#56B4E9",
@@ -215,7 +215,7 @@ age_group_plot <- age_group %>%
             size = 4) +
   labs(x = "",
        y = "Total") +
-    theme(axis.text.x=element_text(angle=45,hjust=1))
+    theme(axis.text.x = element_text(angle=45, hjust=1))
 ```
 
 ```{r, include=TRUE}
@@ -243,7 +243,8 @@ fav_dis_plot <- fav_dis %>%
             size = 4) +
   coord_flip() +
   labs(x = "",
-       y = "Total")
+       y = "Total") +
+  theme(axis.text.y = element_text(size = 10))
 ```
 
 ```{r, include=TRUE, fig.width=15}
