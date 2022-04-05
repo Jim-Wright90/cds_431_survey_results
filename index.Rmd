@@ -49,6 +49,18 @@ gtky[sapply(gtky, is.character)] <- lapply(gtky[sapply(gtky, is.character)],
                                                  as.factor)
 
 str(gtky)
+
+pre_surv <- import(here("data", "pre_survey.sav"),
+               setclass = "tbl_df") %>% 
+  characterize() %>% 
+  janitor::clean_names()
+
+str(pre_surv)
+
+pre_surv[sapply(pre_surv, is.character)] <- lapply(pre_surv[sapply(pre_surv, is.character)],
+                                                   as.factor)
+
+str(pre_surv)
 ```
 
 
@@ -249,4 +261,135 @@ fav_dis_plot <- fav_dis %>%
 
 ```{r, include=TRUE, fig.width=15}
 ggplotly(fav_dis_plot)
+```
+
+
+## Pre-Survey Results 
+
+46 total pre-survey responses 
+
+### Question 1: Are you an undergraduate or post bac student?
+
+```{r, include=FALSE}
+str(pre_surv)
+
+stu_type2 <- pre_surv %>% 
+  group_by(q1) %>% 
+  count()
+
+
+stu_plot2 <- stu_type2 %>% 
+  ggplot(aes(q1, n)) +
+  geom_col(fill = "#56B4E9",
+             alpha = 0.7) +
+  scale_y_continuous(limits = c(0, 50),
+                     breaks = c(0, 10, 20, 30, 40, 50)) +
+  geom_text(aes(q1, n, label = n),
+            size = 4,
+            nudge_y = 2.0,
+            nudge_x = 0.3) +
+  labs(x = "",
+       y = "Total")
+```
+
+```{r, include=TRUE}
+ggplotly(stu_plot2)
+```
+
+### Question 2: During your undergraduate or post-bac program at the University of Oregon, have any of your courses used Microsoft Teams to facilitate communication between instructor and students?
+
+```{r, include=FALSE}
+
+pre_q2 <- pre_surv %>% 
+  group_by(q2) %>% 
+  count() %>% 
+  na.omit()
+
+pre_q2$q2 <- factor(pre_q2$q2, levels = c("Yes",
+                                         "Maybe",
+                                         "No"))
+
+pre_q2_plot <- pre_q2 %>% 
+  ggplot(aes(q2, n)) +
+  geom_col(fill = "#56B4E9",
+             alpha = 0.7) +
+  scale_y_continuous(limits = c(0, 40),
+                     breaks = c(0, 10, 20, 30, 40)) +
+  geom_text(aes(q2, n, label = n),
+            size = 4,
+            nudge_y = 2.0,
+            nudge_x = 0.3) +
+  labs(x = "",
+       y = "Total")
+```
+
+```{r, include=TRUE}
+ggplotly(pre_q2_plot)
+```
+
+### Question 3: I am familiar with how to use Microsoft Teams for course communication
+
+```{r, include=FALSE}
+
+pre_q3 <- pre_surv %>% 
+  group_by(q3) %>% 
+  count() %>% 
+  na.omit()
+
+pre_q3$q3 <- factor(pre_q3$q3, levels = c("Strongly disagree",
+                                         "Somewhat disagree",
+                                         "Neither agree nor disagree",
+                                         "Somewhat agree",
+                                         "Strongly agree"))
+
+pre_q3_plot <- pre_q3 %>% 
+  ggplot(aes(q3, n)) +
+  geom_col(fill = "#56B4E9",
+             alpha = 0.7) +
+  scale_y_continuous(limits = c(0, 20),
+                     breaks = c(0, 5, 10, 15, 20)) +
+  geom_text(aes(q3, n, label = n),
+            size = 4,
+            nudge_y = 2.0,
+            nudge_x = 0.3) +
+  coord_flip() +
+  labs(x = "",
+       y = "Total")
+```
+
+```{r, include=TRUE}
+ggplotly(pre_q3_plot)
+```
+
+### Question 4: What is your preferred method to receive Canvas notifications about class?
+
+```{r, include=FALSE}
+
+pre_q4 <- pre_surv %>% 
+  group_by(q4) %>% 
+  count() %>% 
+  na.omit()
+
+
+# pre_q_4_resp <- c("Instructor sends email through Canvas",
+#                   "Instructor sends notification through \n course announcements tab")
+
+
+pre_q4_plot <- pre_q4 %>% 
+  ggplot(aes(q4, n)) +
+  geom_col(fill = "#56B4E9",
+             alpha = 0.7) +
+  scale_y_continuous(limits = c(0, 30),
+                     breaks = c(0, 5, 10, 15, 20, 25, 30)) +
+  geom_text(aes(q4, n, label = n),
+            size = 4,
+            nudge_y = 2.0,
+            nudge_x = 0.3) +
+  coord_flip() +
+  labs(x = "",
+       y = "Total")
+```
+
+```{r, include=TRUE}
+ggplotly(pre_q4_plot)
 ```
